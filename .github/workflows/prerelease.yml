@@ -16,7 +16,7 @@ jobs:
             -   name: clone web repo
                 uses: actions/checkout@v2
                 with:
-                    repository: 'web-repo'
+                    repository: 'test-auto-pr-create/web'
                     token: ${{ secrets.GITHUB_TOKEN }}
                     ref: 'main'
             -   name: install dependencies
