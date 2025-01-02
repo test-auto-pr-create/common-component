@@ -25,9 +25,9 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
 
-        # Step 3: Copy changes from common-component to web
-        - name: Copy changes to web repository
+        - name: install dependecies
           run: |
+            cd web
             yarn install
 
         # Step 4: Push changes to a new branch in the web repository
