@@ -32,6 +32,8 @@ jobs:
 
         # Step 4: Push changes to a new branch in the web repository
         - name: Push changes to web repository
+          env:
+            GITHUB_TOKEN: ${{ secrets.ORG_SECRET }}
           run: |
             cd web
             git checkout -b install-dependencies
