@@ -14,19 +14,36 @@ jobs:
     create_pr:
         runs-on: ubuntu-latest
         steps:
-            -   name: clone web repo
-                uses: actions/checkout@v2
-                with:
-                    repository: 'test-auto-pr-create/web'
-                    token: ${{ secrets.ORG_SECRET }}
-                    ref: 'main'
-            -   name: install dependencies
-                run: npm install
-            -   name: create PR
-                run: |
-                    git checkout -b prerelease
-                    git add .
-                    git commit -m "prerelease"
-                    git push origin prerelease
-                    gh pr create --base main --head prerelease --title "prerelease" --body "prerelease"
-        
+            - name: Checkout web repository
+              uses: actions/checkout@v2
+              with:
+                repository: 'test-auto-pr-create/web'
+                token: ${{ secrets.ORG_SECRET }}
+                ref: 'main'
+            
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: '16' # Use the version your project needs
+
+            - name: Install dependencies
+              run: npm install
+            
+            - name: Create a new branch
+              run: git checkout -b prerelease
+
+            - name: Commit changes
+              run: |
+                git add .
+                git commit -m "prerelease"
+            
+            - name: Push branch to remote
+              env:
+                GITHUB_TOKEN: ${{ secrets.ORG_SECRET }}
+              run: git push origin prerelease
+            
+            - name: Create Pull Request
+              env:
+                GITHUB_TOKEN: ${{ secrets.ORG_SECRET }}
+              run: |
+                gh pr create --base main --head prerelease --title "prerelease" --body "Automated PR for prerelease branch"
