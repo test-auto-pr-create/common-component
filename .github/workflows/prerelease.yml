@@ -34,6 +34,9 @@ jobs:
         - name: Push changes to web repository
           run: |
             cd web
+            git checkout -b install-dependencies
+            git add .
+            git commit -m "install dependencies"
             git push origin -u install-dependencies
 
         # Step 5: Create a Pull Request in the web repository
