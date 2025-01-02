@@ -39,6 +39,7 @@ jobs:
             git checkout -b install-dependencies
             git add .
             git commit -m "install dependencies"
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/test-auto-pr-create/web.git
             git push origin -u install-dependencies
 
         # Step 5: Create a Pull Request in the web repository
