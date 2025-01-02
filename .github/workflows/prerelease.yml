@@ -15,10 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         # Step 1: Checkout the current repository (common-component)
-        - name: Checkout common-component
-          uses: actions/checkout@v2
-          with:
-            token: ${{ secrets.ORG_SECRET }}
+       
 
         # Step 2: Clone the target repository (web)
         - name: Clone web repository
