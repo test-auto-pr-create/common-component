@@ -1,0 +1,31 @@
+name: Create PR in web repo
+
+on: 
+    push: 
+        branches-ignore:
+            - main
+
+env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+
+    create_pr:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: clone web repo
+                uses: actions/checkout@v2
+                with:
+                    repository: 'web-repo'
+                    token: ${{ secrets.GITHUB_TOKEN }}
+                    ref: 'main'
+            -   name: install dependencies
+                run: npm install
+            -   name: create PR
+                run: |
+                    git checkout -b prerelease
+                    git add .
+                    git commit -m "prerelease"
+                    git push origin prerelease
+                    gh pr create --base main --head prerelease --title "prerelease" --body "prerelease"
+        
