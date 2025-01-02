@@ -11,39 +11,38 @@ env:
 
 jobs:
 
-    create_pr:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout web repository
-              uses: actions/checkout@v2
-              with:
-                repository: 'test-auto-pr-create/web'
-                token: ${{ secrets.ORG_SECRET }}
-                ref: 'main'
-            
-            - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                node-version: '16' # Use the version your project needs
+   create_pr:
+    runs-on: ubuntu-latest
+    steps:
+        # Step 1: Checkout the current repository (common-component)
+        - name: Checkout common-component
+          uses: actions/checkout@v2
+          with:
+            token: ${{ secrets.ORG_SECRET }}
 
-            - name: Install dependencies
-              run: npm install
-            
-            - name: Create a new branch
-              run: git checkout -b prerelease
+        # Step 2: Clone the target repository (web)
+        - name: Clone web repository
+          run: |
+            git clone https://github.com/test-auto-pr-create/web.git
+            cd web
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
 
-            - name: Commit changes
-              run: |
-                git add .
-                git commit -m "prerelease"
-            
-            - name: Push branch to remote
-              env:
-                GITHUB_TOKEN: ${{ secrets.ORG_SECRET }}
-              run: git push origin prerelease
-            
-            - name: Create Pull Request
-              env:
-                GITHUB_TOKEN: ${{ secrets.ORG_SECRET }}
-              run: |
-                gh pr create --base main --head prerelease --title "prerelease" --body "Automated PR for prerelease branch"
+        # Step 3: Copy changes from common-component to web
+        - name: Copy changes to web repository
+          run: |
+            yarn install
+
+        # Step 4: Push changes to a new branch in the web repository
+        - name: Push changes to web repository
+          run: |
+            cd web
+            git push origin -u install-dependencies
+
+        # Step 5: Create a Pull Request in the web repository
+        - name: Create Pull Request in web
+          env:
+            GITHUB_TOKEN: ${{ secrets.ORG_SECRET }}
+          run: |
+            cd web
+            gh pr create --base main --head install-dependencies --title "install dependecies" --body "This PR syncs visualizer version from common-component."
